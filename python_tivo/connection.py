@@ -61,9 +61,12 @@ class TiVoConnection(object):
   def __init__(self, host, port):
     self._host = host
     self._port = port
+    self._sendCommandsLock = threading.Lock()
 
   def sendCommands(self, commands):
     try:
+      self._sendCommandsLock.acquire()
+
       sock = ThreadedSocket(self._host, self._port)
 
       if len(commands) > 0:
@@ -94,6 +97,8 @@ class TiVoConnection(object):
       return parsedResponses
     except:
       raise TiVoSocketError()
+    finally:
+      self._sendCommandsLock.release()
 
   @staticmethod
   def _readFromSocket(sock, timeout):
