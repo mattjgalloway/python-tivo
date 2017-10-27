@@ -131,7 +131,7 @@ class TiVoConnection(object):
     if len(responses) == 0:
       return None
 
-    lastResponse = responses[-1]
+    lastResponse = responses[0]
     return response.FullChannelName(lastResponse)
 
   def setChannel(self, channel):
